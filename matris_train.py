@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
 #initial values
-#give weights and bias random values between 0 and 0.2
+#give weights and bias random values between 0.5 and 0.6
 w1 = random.uniform(0.5,0.6)
 w2 = random.uniform(0.5,0.6)
 w3 = random.uniform(0.5,0.6)
