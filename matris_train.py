@@ -6,11 +6,11 @@ import matplotlib.pyplot as plt
 
 #initial values
 #give weights and bias random values between 0 and 0.2
-w1 = random.uniform(0.5,1)
-w2 = random.uniform(0.5,1)
-w3 = random.uniform(0.5,1)
-w4 = random.uniform(0.5,1)
-bias1 = random.uniform(0.5,1)
+w1 = random.uniform(0.5,0.6)
+w2 = random.uniform(0.5,0.6)
+w3 = random.uniform(0.5,0.6)
+w4 = random.uniform(0.5,0.6)
+bias1 = random.uniform(0.5,0.6)
 w_array = np.array([[w1],[w2],[w3],[w4]])
 
 # CONSTANTS
