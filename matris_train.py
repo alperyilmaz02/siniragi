@@ -6,11 +6,12 @@ import matplotlib.pyplot as plt
 
 #initial values
 #give weights and bias random values between 0 and 0.2
-w1 = random.uniform(0,0.2)
-w2 = random.uniform(0,0.2)
-w3 = random.uniform(0,0.2)
-w4 = random.uniform(0,0.2)
-bias1 = random.uniform(0,0.2)
+w1 = random.uniform(0.2,1)
+w2 = random.uniform(0.2,1)
+w3 = random.uniform(0.2,1)
+w4 = random.uniform(0.2,1)
+w5 = random.uniform(0.2,1)
+bias1 = random.uniform(0.2,1)
 w_array = np.array([[w1],[w2],[w3],[w4]])
 
 # CONSTANTS
@@ -60,6 +61,7 @@ def hatahesaplama( out_matris, dataFrame):
 def ileriYay( newDataFrame, bias_array):
     hid = newDataFrame.dot(w_array)
     hid1 = hid + bias_array
+    
     x = len(hid1)
     id = 0
     matris = np.full((x, 1), None)
@@ -67,6 +69,14 @@ def ileriYay( newDataFrame, bias_array):
     for row in hid1:
         matris[id] = float(activ_func(row))
         id = id + 1
+
+    id = 0
+    out = matris.dot(w5)
+    out1 = out + bias_array
+    for row in out1:
+        matris[id] = float(activ_func(row))
+        id = id + 1
+
     return matris
 
 def geriYay( out_matris, dataFrame, new_matris, newDataFrame, bias1):
