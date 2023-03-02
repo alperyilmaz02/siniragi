@@ -17,10 +17,10 @@ def detect_flower(id, out1):
     if  -1 < out1 < 0.7: 
         print(f"{id}. flower is Iris-setosa",out1, input_ndata[id][5])
 
-    elif 0.7 < out1 < 1.4:
+    elif 0.7 < out1 < 2.2:
         print(f"{id}. flower is Iris-versicolor",out1, input_ndata[id][5])
 
-    elif  1.4 < out1 < 5:  
+    elif  2.2 < out1 < 5:  
         print(f"{id}. flower is Iris-virginica",out1, input_ndata[id][5])
 
     else:

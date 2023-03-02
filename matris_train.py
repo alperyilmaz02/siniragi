@@ -6,12 +6,12 @@ import matplotlib.pyplot as plt
 
 #initial values
 #give weights and bias random values between 0 and 0.2
-w1 = random.uniform(0.2,1)
-w2 = random.uniform(0.2,1)
-w3 = random.uniform(0.2,1)
-w4 = random.uniform(0.2,1)
-w5 = random.uniform(0.2,1)
-bias1 = random.uniform(0.2,1)
+w1 = random.uniform(0.5,0.6)
+w2 = random.uniform(0.5,0.6)
+w3 = random.uniform(0.5,0.6)
+w4 = random.uniform(0.5,0.6)
+w5 = random.uniform(0.5,0.6)
+bias1 = random.uniform(0.5,0.6)
 w_array = np.array([[w1],[w2],[w3],[w4]])
 
 # CONSTANTS
@@ -94,12 +94,12 @@ def geriYay( out_matris, dataFrame, new_matris, newDataFrame, bias1):
             exp_out = exp_out3
 
         if out_matris[id] >= 0:
-            turev = (out_matris[id] - exp_out).dot([newDataFrame[id]])
+            turev = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w5
             new_matris = np.transpose(new_matris) - (LR.dot(turev))
 
         elif out_matris[id] < 0:
-            turev = (out_matris[id] - exp_out).dot([newDataFrame[id]])
-            new_matris = np.transpose(new_matris) - (LR.dot(turev)) * 0.01
+            turev = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w5
+            new_matris = np.transpose(new_matris) - (LR.dot(turev)) * 0.01 * 0.01
 
         turev = (out_matris[id] - exp_out)
         bias1 = bias1 -  (LR.dot(turev)) 
