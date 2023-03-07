@@ -23,6 +23,7 @@ w14 = random.uniform(0.5,0.6)
 w15 = random.uniform(0.5,0.6)
 bias1 = random.uniform(0.5,0.6)
 bias2 = random.uniform(0.5,0.6)
+
 w1_array = np.array([[w1],[w2],[w3],[w4]])
 w2_array = np.array([[w5],[w6],[w7],[w8]])
 w3_array = np.array([[w9],[w10],[w11],[w12]])
@@ -72,28 +73,56 @@ def hatahesaplama( out_matris, dataFrame):
 
     return err
 
-def ileriYay( newDataFrame, bias_array):
-    hid = newDataFrame.dot(w_array)
-    hid1 = hid + bias_array
+def ileriYay( newDataFrame, bias1_array, bias2_array):
+
+    #hidden layer 1
+    hid = newDataFrame.dot(w1_array)
+    hid1 = hid + bias1_array
     
     x = len(hid1)
     id = 0
+    matris1 = np.full((x, 1), None)
+    matris2 = np.full((x, 1), None)
+    matris3 = np.full((x, 1), None)
     matris = np.full((x, 1), None)
 
     for row in hid1:
-        matris[id] = float(activ_func(row))
+        matris1[id] = float(activ_func(row))
+        id = id + 1
+    
+    #hidden layer 2
+    id = 0
+    hid = newDataFrame.dot(w2_array)
+    hid2 = hid + bias1_array
+    
+    for row in hid2:
+        matris2[id] = float(activ_func(row))
         id = id + 1
 
+    #hidden layer 3
     id = 0
-    out = matris.dot(w5)
-    out1 = out + bias_array
+    hid = newDataFrame.dot(w3_array)
+    hid3 = hid + bias1_array
+    
+    for row in hid3:
+        matris3[id] = float(activ_func(row))
+        id = id + 1
+    
+    #out layer
+    id = 0
+    #combining matrices
+    com_matris = np.hstack((matris1, matris2, matris3))
+    
+    out = com_matris.dot(wo_array)
+    out1 = out + bias2_array
+   
     for row in out1:
         matris[id] = float(activ_func(row))
         id = id + 1
-
+   
     return matris
 
-def geriYay( out_matris, dataFrame, new_matris, newDataFrame, bias1):
+def geriYay( out_matris, dataFrame, w1_array, w2_array, w3_array, wo_array, newDataFrame, bias1, bias2):
     
     id = 0
     for row in dataFrame:
@@ -137,11 +166,12 @@ itr = 1
 
 # train dataset for 1000 iterations
 while(itr < 1000):
-    bias_array = np.full((x, 1), bias1)
-    out_matris = ileriYay(newDataFrame, bias_array)
+    bias1_array = np.full((x, 1), bias1)
+    bias2_array = np.full((x, 1), bias2)
+    out_matris = ileriYay(newDataFrame, bias1_array, bias2_array)
     err = hatahesaplama(out_matris, dataFrame)
     err_array = np.append(err_array, err)
-    w_array, bias1 = geriYay(out_matris, dataFrame, w_array, newDataFrame, bias1)
+    w1_array, w2_array, w3_array, wo_array, bias1, bias2 = geriYay(out_matris, dataFrame, w1_array, w2_array, w3_array, wo_array, newDataFrame, bias1, bias2)
     itr = itr + 1
 
 #show error
@@ -151,7 +181,10 @@ plt.ylabel('error')
 plt.show()
 
 # writing weights into the file
-df = pd.DataFrame(w_array)
+df = pd.DataFrame(w1_array)
+df = pd.DataFrame(w2_array)
+df = pd.DataFrame(w3_array)
+df = pd.DataFrame(wo_array)
 df.to_csv("weights.csv")
 
 
