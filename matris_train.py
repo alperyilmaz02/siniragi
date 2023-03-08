@@ -120,9 +120,9 @@ def ileriYay( newDataFrame, bias1_array, bias2_array):
         matris[id] = float(activ_func(row))
         id = id + 1
    
-    return matris
+    return matris, com_matris
 
-def geriYay( out_matris, dataFrame, w1_array, w2_array, w3_array, wo_array, newDataFrame, bias1, bias2):
+def geriYay( out_matris, com_matris, dataFrame, w1_array, w2_array, w3_array, wo_array, newDataFrame, bias1, bias2):
     
     id = 0
     for row in dataFrame:
@@ -137,12 +137,29 @@ def geriYay( out_matris, dataFrame, w1_array, w2_array, w3_array, wo_array, newD
             exp_out = exp_out3
 
         if out_matris[id] >= 0:
-            turev = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w5
-            new_matris = np.transpose(new_matris) - (LR.dot(turev))
+            turev1 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w13
+            w1_array = np.transpose(w1_array) - (LR.dot(turev1))
+
+            turev2 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w14
+            w2_array = np.transpose(w2_array) - (LR.dot(turev2))
+
+            turev3 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w15
+            print(turev3)
+            w3_array = np.transpose(w3_array) - (LR.dot(turev3))
+            
+            turevout = (out_matris[id] - exp_out) * com_matris[id]
+            wo_array = wo_array - (LR.dot(turevout))
+            print(turevout)
 
         elif out_matris[id] < 0:
-            turev = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w5
-            new_matris = np.transpose(new_matris) - (LR.dot(turev)) * 0.01 * 0.01
+            turev1 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w13
+            w1_array = np.transpose(w1_array) - (LR.dot(turev1)) * 0.01 * 0.01
+
+            turev2 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w14
+            w2_array = np.transpose(w2_array) - (LR.dot(turev2)) * 0.01 * 0.01
+
+            turev3 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w15
+            w3_array = np.transpose(w3_array) - (LR.dot(turev3)) * 0.01 * 0.01
 
         turev = (out_matris[id] - exp_out)
         bias1 = bias1 -  (LR.dot(turev)) 
@@ -150,7 +167,7 @@ def geriYay( out_matris, dataFrame, w1_array, w2_array, w3_array, wo_array, newD
 
         new_matris = np.transpose(new_matris)
 
-    return new_matris, bias1
+    return w1_array, w2_array, w3_array, wo_array, bias1, bias2
 
 #Function = Functions()
 test_train() #split dataset as test(%20) and train(%80) 
@@ -168,10 +185,10 @@ itr = 1
 while(itr < 1000):
     bias1_array = np.full((x, 1), bias1)
     bias2_array = np.full((x, 1), bias2)
-    out_matris = ileriYay(newDataFrame, bias1_array, bias2_array)
+    out_matris, com_matris = ileriYay(newDataFrame, bias1_array, bias2_array)
     err = hatahesaplama(out_matris, dataFrame)
     err_array = np.append(err_array, err)
-    w1_array, w2_array, w3_array, wo_array, bias1, bias2 = geriYay(out_matris, dataFrame, w1_array, w2_array, w3_array, wo_array, newDataFrame, bias1, bias2)
+    w1_array, w2_array, w3_array, wo_array, bias1, bias2 = geriYay(out_matris, com_matris, dataFrame, w1_array, w2_array, w3_array, wo_array, newDataFrame, bias1, bias2)
     itr = itr + 1
 
 #show error
