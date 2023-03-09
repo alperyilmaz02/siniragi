@@ -3,6 +3,7 @@ import pandas as pd
 import random
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
+import csv
 
 #initial values
 #give weights and bias random values between 0.5 and 0.6
@@ -85,7 +86,7 @@ def ileriYay( newDataFrame, bias1_array, bias2_array):
     matris2 = np.full((x, 1), None)
     matris3 = np.full((x, 1), None)
     matris = np.full((x, 1), None)
-
+   
     for row in hid1:
         matris1[id] = float(activ_func(row))
         id = id + 1
@@ -117,12 +118,13 @@ def ileriYay( newDataFrame, bias1_array, bias2_array):
     out1 = out + bias2_array
    
     for row in out1:
-        matris[id] = float(activ_func(row))
+        for num in row:
+            matris[id] = float(activ_func(num))
         id = id + 1
-   
+    
     return matris, com_matris
 
-def geriYay( out_matris, com_matris, dataFrame, w1_array, w2_array, w3_array, wo_array, newDataFrame, bias1, bias2):
+def geriYay(out_matris, com_matris, dataFrame, w1_array, w2_array, w3_array, wo_array, newDataFrame, bias1, bias2):
     
     id = 0
     for row in dataFrame:
@@ -137,43 +139,39 @@ def geriYay( out_matris, com_matris, dataFrame, w1_array, w2_array, w3_array, wo
             exp_out = exp_out3
 
         if out_matris[id] >= 0:
+           
             turev1 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w13
-            w1_array = np.transpose(w1_array) - (LR.dot(turev1))
-
+            w1_array = w1_array - np.transpose(LR * turev1)
+    
             turev2 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w14
-            w2_array = np.transpose(w2_array) - (LR.dot(turev2))
+            w2_array = w2_array - np.transpose(LR * turev2)
 
             turev3 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w15
-            print(turev3)
-            w3_array = np.transpose(w3_array) - (LR.dot(turev3))
+            w3_array = w3_array - np.transpose(LR * turev3)
             
             turevout = (out_matris[id] - exp_out) * com_matris[id]
-            wo_array = wo_array - (LR.dot(turevout))
-            print(turevout)
-
+            wo_array = wo_array - np.transpose(LR * turevout)
+            
         elif out_matris[id] < 0:
             turev1 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w13
-            w1_array = np.transpose(w1_array) - (LR.dot(turev1)) * 0.01 * 0.01
+            w1_array = w1_array - np.transpose(LR * turev1) * 0.01 * 0.01
 
             turev2 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w14
-            w2_array = np.transpose(w2_array) - (LR.dot(turev2)) * 0.01 * 0.01
+            w2_array = w2_array - np.transpose(LR * turev2) * 0.01 * 0.01
 
             turev3 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w15
-            w3_array = np.transpose(w3_array) - (LR.dot(turev3)) * 0.01 * 0.01
+            w3_array = w3_array - np.transpose(LR * turev3) * 0.01 * 0.01
 
-        turev = (out_matris[id] - exp_out)
-        bias1 = bias1 -  (LR.dot(turev)) 
+            turevout = (out_matris[id] - exp_out) * com_matris[id] * 0.01
+            wo_array = wo_array - np.transpose(LR * turevout)
+
         id = id + 1
-
-        new_matris = np.transpose(new_matris)
-
+        
     return w1_array, w2_array, w3_array, wo_array, bias1, bias2
 
-#Function = Functions()
 test_train() #split dataset as test(%20) and train(%80) 
-
-
 err_array = [] #create an array for error values
+
 #INPUT
 dataFrame = pd.read_csv("orn1.csv")
 dataFrame = np.array(dataFrame)
@@ -190,19 +188,24 @@ while(itr < 1000):
     err_array = np.append(err_array, err)
     w1_array, w2_array, w3_array, wo_array, bias1, bias2 = geriYay(out_matris, com_matris, dataFrame, w1_array, w2_array, w3_array, wo_array, newDataFrame, bias1, bias2)
     itr = itr + 1
-
+    
 #show error
 err_array = np.array(err_array)
 plt.plot(err_array)
 plt.ylabel('error')
 plt.show()
 
-# writing weights into the file
-df = pd.DataFrame(w1_array)
-df = pd.DataFrame(w2_array)
-df = pd.DataFrame(w3_array)
-df = pd.DataFrame(wo_array)
-df.to_csv("weights.csv")
+# open the file in the write mode
+with open('weights.csv', 'w') as f:
+    #create the csv writer
+    writer = csv.writer(f)
+
+    # write a row to the csv file
+    writer.writerow(w1_array)
+    writer.writerow(w2_array)
+    writer.writerow(w3_array)
+    writer.writerow(wo_array)
+
 
 
 

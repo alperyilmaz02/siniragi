@@ -33,7 +33,6 @@ def test(input_matris, weight_data):
     out1 = activ_func(out1)
     return out1
     
-
 #GET  INPUT VALUES FOR TESTING
 input_data = pd.read_csv("orn2.csv")
 input_ndata = np.array(input_data)
