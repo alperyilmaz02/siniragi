@@ -6,24 +6,24 @@ import matplotlib.pyplot as plt
 import csv
 
 #initial values
-#give weights and bias random values between 0.5 and 0.6
-w1 = random.uniform(0.5,0.6)
-w2 = random.uniform(0.5,0.6)
-w3 = random.uniform(0.5,0.6)
-w4 = random.uniform(0.5,0.6)
-w5 = random.uniform(0.5,0.6)
-w6 = random.uniform(0.5,0.6)
-w7 = random.uniform(0.5,0.6)
-w8 = random.uniform(0.5,0.6)
-w9 = random.uniform(0.5,0.6)
-w10 = random.uniform(0.5,0.6)
-w11 = random.uniform(0.5,0.6)
-w12 = random.uniform(0.5,0.6)
-w13 = random.uniform(0.5,0.6)
-w14 = random.uniform(0.5,0.6)
-w15 = random.uniform(0.5,0.6)
-bias1 = random.uniform(0.5,0.6)
-bias2 = random.uniform(0.5,0.6)
+#give weights and bias random values between 0.1 and 0.3
+w1 = random.uniform(0.1,0.3)
+w2 = random.uniform(0.1,0.3)
+w3 = random.uniform(0.1,0.3)
+w4 = random.uniform(0.1,0.3)
+w5 = random.uniform(0.1,0.3)
+w6 = random.uniform(0.1,0.3)
+w7 = random.uniform(0.1,0.3)
+w8 = random.uniform(0.1,0.3)
+w9 = random.uniform(0.1,0.3)
+w10 = random.uniform(0.1,0.3)
+w11 = random.uniform(0.1,0.3)
+w12 = random.uniform(0.1,0.3)
+w13 = random.uniform(0.1,0.3)
+w14 = random.uniform(0.1,0.3)
+w15 = random.uniform(0.1,0.3)
+bias1 = random.uniform(0.1,0.3)
+bias2 = random.uniform(0.1,0.3)
 
 w1_array = np.array([[w1],[w2],[w3],[w4]])
 w2_array = np.array([[w5],[w6],[w7],[w8]])
@@ -32,11 +32,9 @@ wo_array = np.array([[w13],[w14],[w15]])
 
 # CONSTANTS
 LR = np.array([0.0001])
-LR_array = np.full((4,1),LR)
 exp_out1 = np.array([[0]])  #Iris-setosa
 exp_out2 = np.array([[1]])  #Iris-versicolor
 exp_out3 = np.array([[2]])  #Iris-virginia
-
 
 
 def test_train():
@@ -139,31 +137,27 @@ def geriYay(out_matris, com_matris, dataFrame, w1_array, w2_array, w3_array, wo_
             exp_out = exp_out3
 
         if out_matris[id] >= 0:
-           
-            turev1 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w13
-            w1_array = w1_array - np.transpose(LR * turev1)
-    
-            turev2 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w14
-            w2_array = w2_array - np.transpose(LR * turev2)
-
-            turev3 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w15
-            w3_array = w3_array - np.transpose(LR * turev3)
-            
-            turevout = (out_matris[id] - exp_out) * com_matris[id]
-            wo_array = wo_array - np.transpose(LR * turevout)
-            
+            num = 1
         elif out_matris[id] < 0:
-            turev1 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w13
-            w1_array = w1_array - np.transpose(LR * turev1) * 0.01 * 0.01
+           num = 0.01
 
-            turev2 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w14
-            w2_array = w2_array - np.transpose(LR * turev2) * 0.01 * 0.01
+        turev1 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w13 * num * num
+        w1_array = w1_array - np.transpose(LR * turev1) 
 
-            turev3 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w15
-            w3_array = w3_array - np.transpose(LR * turev3) * 0.01 * 0.01
+        turev2 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w14 * num * num
+        w2_array = w2_array - np.transpose(LR * turev2) 
 
-            turevout = (out_matris[id] - exp_out) * com_matris[id] * 0.01
-            wo_array = wo_array - np.transpose(LR * turevout)
+        turev3 = (out_matris[id] - exp_out).dot([newDataFrame[id]]) * w15 * num * num
+        w3_array = w3_array - np.transpose(LR * turev3) 
+        
+        turevout = (out_matris[id] - exp_out) * com_matris[id] * num 
+        wo_array = wo_array - np.transpose(LR * turevout) 
+        
+        turbias1 = (out_matris[id] - exp_out) * w13 * num  * num + (out_matris[id] - exp_out) * w14 * num  * num + (out_matris[id] - exp_out) * w15 * num  * num 
+        bias1 = bias1 - LR * turbias1
+        
+        turbias2 = (out_matris[id] - exp_out) * num * 3
+        bias2 = bias2 - LR * turbias2
 
         id = id + 1
         
@@ -205,6 +199,9 @@ with open('weights.csv', 'w') as f:
     writer.writerow(w2_array)
     writer.writerow(w3_array)
     writer.writerow(wo_array)
+    writer.writerow(bias1)
+    writer.writerow(bias2)
+    
 
 
 
