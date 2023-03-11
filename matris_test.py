@@ -1,16 +1,17 @@
 import pandas as pd
-import matris_train
+import matris_train # training file 
 import numpy as np
 
 def main():
 
     #VARIABLES
-    bias1 = matris_train.bias1
+    #bias values taken from train file 
+    bias1 = matris_train.bias1 
     bias2 = matris_train.bias2
 
     #FUNCTIONS
 
-    def detect_flower(out1):
+    def detect_flower(out1): # detecting flower type if it is between defined values
         id = 0
         for row in out1:
 
